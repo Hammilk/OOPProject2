@@ -1,5 +1,5 @@
 public class Heavy extends Container{
-    Heavy(int id, int weight) {
+    Heavy(String id, int weight) {
         super(id, weight, "Heavy");
     }
 

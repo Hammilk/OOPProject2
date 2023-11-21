@@ -1,23 +1,20 @@
 import java.util.ArrayList;
 
 public class Truck implements ITruck{
-    int ID;
-
+    String ID;
     double fuel;
-
     int totalLoadCapacity;
-
     double fuelConsumptionPerKm;
 
-    Terminal currentTerminal;
+    Object currentTerminal;
 
     ArrayList<Container> ContainerList = new ArrayList<>();
 
 
-    public Truck(int ID, Terminal p, int totalLoadCapacity, double fuelConsumptionPerKm,
+    public Truck(String ID, Object terminal, int totalLoadCapacity, double fuelConsumptionPerKm,
                  double fuel){
         this.ID = ID;
-        this.currentTerminal = p;
+        this.currentTerminal = terminal;
         this.totalLoadCapacity = totalLoadCapacity;
         this.fuelConsumptionPerKm = fuelConsumptionPerKm;
         this.fuel = fuel;
@@ -30,7 +27,7 @@ public class Truck implements ITruck{
 
     @Override
     public boolean goTo(Terminal p) {
-        double fuelUse = p.getDistance(currentTerminal)*fuelConsumptionPerKm;
+        double fuelUse = p.getDistance((Terminal) currentTerminal)*fuelConsumptionPerKm;
         if(fuelUse<fuel){
             currentTerminal = p;
             fuel-=fuelUse;

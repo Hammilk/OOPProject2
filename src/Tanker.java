@@ -1,5 +1,5 @@
 public class Tanker extends Heavy{
-    Tanker(int id, int weight) {
+    Tanker(String id, int weight) {
         super(id, weight);
     }
 

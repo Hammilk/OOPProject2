@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Terminal implements ITerminal {
-    private int ID;
+    private String ID;
     private double xCoordinate;
     private double yCoordinate;
 
@@ -9,7 +9,7 @@ public class Terminal implements ITerminal {
     ArrayList<Truck> history = new ArrayList<>();
     ArrayList<Truck> current = new ArrayList<>();
 
-    Terminal(int ID, double xCoordinate, double yCoordinate){
+    Terminal(String ID, double xCoordinate, double yCoordinate){
         this.ID = ID;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;

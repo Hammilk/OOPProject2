@@ -1,15 +1,13 @@
 import java.util.Scanner;
 
 public class CreateTerminal {
-    Terminal createTerminal(){
+    Terminal createTerminal(int id){
 
         Scanner input = new Scanner(System.in);
-        KeyGen keyGen = new KeyGen();
         int x;
         int y;
 
         System.out.println("Create Terminal.");
-        String id = keyGen.keyGenerator("Terminal");
 
         System.out.println("Enter X-Coordinate of Terminal " + ": ");
         x = input.nextInt();

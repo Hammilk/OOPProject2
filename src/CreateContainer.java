@@ -1,16 +1,14 @@
 import java.util.Scanner;
 
 public class CreateContainer {
-    Container createContainer(){
+    Container createContainer(int id){
 
         Scanner input = new Scanner(System.in);
-        KeyGen keyGen = new KeyGen();
         int weight;
 
         Container container = null;
 
         System.out.println("Create Container.");
-        String id = keyGen.keyGenerator("Container");
 
         System.out.println("What type of container to create?");
         System.out.println("1. Basic Container");

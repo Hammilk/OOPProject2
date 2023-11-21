@@ -1,5 +1,5 @@
 public class Refrigerator extends Heavy{
-    Refrigerator(String id, int weight) {
+    Refrigerator(int id, int weight) {
         super(id, weight);
     }
 

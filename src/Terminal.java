@@ -1,20 +1,30 @@
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Terminal implements ITerminal {
-    private String ID;
+    private int ID;
     private double xCoordinate;
     private double yCoordinate;
 
-    ArrayList<Container> containers = new ArrayList<>();
+    Map<Integer, Object> containerMap;
     ArrayList<Truck> history = new ArrayList<>();
     ArrayList<Truck> current = new ArrayList<>();
 
-    Terminal(String ID, double xCoordinate, double yCoordinate){
+    Terminal(int ID, double xCoordinate, double yCoordinate){
         this.ID = ID;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
     }
 
+    @Override
+    public void addContainer(Container T) {
+        containerMap.put(T.id,T);
+    }
+
+    @Override
+    public void removeContainer(Container T) {
+        containerMap.remove(T.id, T);
+    }
 
     @Override
     public void incomingTrucks(Truck T) {

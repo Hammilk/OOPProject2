@@ -1,6 +1,6 @@
 public class Basic extends Container{
 
-    Basic(String id, int weight) {
+    Basic( int id, int weight) {
         super(id, weight, "Basic");
     }
 

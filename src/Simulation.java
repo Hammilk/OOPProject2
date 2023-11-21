@@ -3,11 +3,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Simulation {
+public class Simulation extends Help {
 
-    Map<String, Object> terminalMap;
-    Map<String, Object> truckMap;
-    Map<String, Object> containerMap;
+    Map<Integer, Object> terminalMap;
+    Map<Integer, Object> truckMap;
+    Map<Integer, Object> containerMap;
 
     Scanner input = new Scanner(System.in);
     Container container = null;
@@ -16,88 +16,127 @@ public class Simulation {
 
     void sim(){
 
-        //Create Terminal or choose existing terminal phase
+        boolean cont = true;
+        int terminalCount = 0;
+        int truckCount = 0;
+        int containerCount = 0;
 
-        System.out.println("Create new Terminal or choose exising Terminal?");
-        System.out.println("1. New Terminal");
-        System.out.println("2. Existing Terminal");
-        if(input.nextInt()==1){
-            terminal = new CreateTerminal().createTerminal();
-        }
-        else{
-            System.out.println("Enter Terminal ID");
-            System.out.println("Type \"Help\" to see list of Terminal IDs");
-            if(Objects.equals(input.next(), "Help")){
-                help(terminalMap);
-                System.out.println("Enter Terminal ID");
+        //Create Terminals
+
+        while(cont){
+            terminalMap.put(terminalCount++, new CreateTerminal().createTerminal(terminalCount));
+            System.out.println("Continue making new terminals? (Y/N)");
+            if(input.next().charAt(0)=='N'){
+                cont=false;
             }
-            terminal = (Terminal) terminalMap.get(input.next());
         }
+        cont = true;
 
         //Create Truck or use existing truck phase
 
-        System.out.println("Create new Truck or choose exising Terminal?");
-        System.out.println("1. New Truck");
-        System.out.println("2. Existing Truck");
-        if(input.nextInt()==1){
-            truck = new CreateTruck().createTruck(terminalMap);
-        }
-        else{
-            System.out.println("Enter Truck ID");
-            System.out.println("Type \"Help\" to see list of Truck IDs");
-            if(Objects.equals(input.next(), "Help")){
-                help(truckMap, terminal);
-                System.out.println("Enter Truck ID");
+        while(cont){
+            truckMap.put(truckCount++, new CreateTruck().createTruck(terminalMap, terminalCount));
+            System.out.println("Continue making new trucks? (Y/N)");
+            if(input.next().charAt(0)=='N'){
+                cont=false;
             }
-            truck = (Truck) truckMap.get(input.next());
         }
+        cont = true;
 
         //Create Container Phase or use existing container
 
-        System.out.println("Create new container or use existing container?");
-        System.out.println("1. New Container");
-        System.out.println("2. Existing Container");
-        if(input.nextInt()==1){
-            container = new CreateContainer().createContainer();
-        }
-        else{
-            System.out.println("Enter container ID");
-            System.out.println("Type \"Help\" to see list of Container IDs");
-            if(Objects.equals(input.next(), "Help")){
-                help(containerMap);
-                System.out.println("Enter container ID");
+        while(cont){
+            terminal.addContainer(new CreateContainer().createContainer(containerCount));
+            System.out.println("Continue making new containers? (Y/N)");
+            if(input.next().charAt(0)=='N'){
+                cont=false;
             }
-            container = (Container) containerMap.get(input.next());
         }
+        cont = true;
 
         //Loading/Unloading Phase
+        while(cont){
+            System.out.println("Choose a truck for loading/unloading: ");
+            truck = (Truck) help(truckMap);
+            while(cont){
+                System.out.println("Load truck ID " + truck.ID + "? (Y/N)");
+                if(input.next().charAt(0)=='Y'){
+                    System.out.println("Select container to load");
+                    container = (Container) help(containerMap, terminal);
+                    truck.load(container);
+                    System.out.println("Load more containers into truck ID" + truck.ID + "? (Y/N)");
+                    if(input.next().charAt(0)=='N') {
+                        cont = false;
+                    }
+                }
+            }
+            cont = true;
+            while(cont){
+                System.out.println("Unload truck ID " + truck.ID + "? (Y/N)");
+                if(input.next().charAt(0)=='Y'){
+                    while(cont){
+                        System.out.println("Select container to unload");
+                        container = (Container) help(containerMap, terminal);
+                        truck.load(container);
+                        System.out.println("Load more containers into truck ID" + truck.ID + "? (Y/N)");
+                        if(input.next().charAt(0)=='N') {
+                            cont = false;
+                        }
+                    }
+                }
+                cont = true;
+                System.out.println("Load more trucks?");
+                if(input.next().charAt(0)=='N'){
+                    cont = false;
+                }
 
+            }
 
-
+        }
+        cont = true;
         //Travel Phase
+
+        while(cont){
+            Terminal destinationTerminal;
+            System.out.println("Choose a terminal: ");
+            terminal = (Terminal) help(terminalMap);
+            System.out.println("Choose a truck to travel");
+            truck = (Truck) help(terminalMap, terminal);
+            System.out.println("Choose a destination point");
+            destinationTerminal = (Terminal) help(terminalMap);
+
+
+
+
+        }
 
         //Truck Refuel Phase
 
 
         //Truck Picking Phase
-        pickTruck obj1 = new pickTruck();
-        obj1.pTruck(truckMap);
+
 
         //Create container phase
+
+
     }
 
-    void help(Map<String, Object> m){
-        for (String key : m.keySet()){
-            System.out.println("ID: " + key + "\n");
-        }
-    }
 
-    void help(Map<String, Object> m, Terminal terminal){
-        for (String key : m.keySet()){
-            if(m.containsValue(terminal)){
-                System.out.println("ID: " + key + "\n");
-            }
-        }
-    }
+
+
+
+
+
 
 }
+
+
+/*
+System.out.println("Type \"Help\" to see list of Terminal IDs");
+            if(Objects.equals(input.next(), "Help")){
+                help(terminalMap);
+                System.out.println("Enter Terminal ID");
+            }
+
+
+ */

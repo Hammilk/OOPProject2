@@ -3,4 +3,8 @@ public interface ITerminal {
 
     void outgoingTruck(Truck T);
 
+    void addContainer(Container T);
+
+    void removeContainer(Container T);
+
 }

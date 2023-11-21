@@ -1,7 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Truck implements ITruck{
-    String ID;
+    int ID;
     double fuel;
     int totalLoadCapacity;
     double fuelConsumptionPerKm;
@@ -10,8 +12,10 @@ public class Truck implements ITruck{
 
     ArrayList<Container> ContainerList = new ArrayList<>();
 
+    Map<Integer, Object> containerMap = new HashMap<>();
 
-    public Truck(String ID, Object terminal, int totalLoadCapacity, double fuelConsumptionPerKm,
+
+    public Truck(int ID, Object terminal, int totalLoadCapacity, double fuelConsumptionPerKm,
                  double fuel){
         this.ID = ID;
         this.currentTerminal = terminal;
@@ -47,14 +51,14 @@ public class Truck implements ITruck{
 
     @Override
     public boolean load(Container cont) {
-        ContainerList.add(cont);
+        containerMap.put(cont.id, cont);
         fuelConsumptionPerKm += cont.consumption();
         return false;
     }
 
     @Override
     public boolean unLoad(Container cont) {
-        ContainerList.remove(cont);
+        containerMap.remove(cont.id, cont);
         fuelConsumptionPerKm -= cont.consumption();
         return false;
     }

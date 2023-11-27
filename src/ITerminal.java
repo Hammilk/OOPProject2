@@ -1,7 +1,7 @@
 public interface ITerminal {
-    void incomingTrucks(Truck T);
+    void incomingTrucks(Integer id, Truck T);
 
-    void outgoingTruck(Truck T);
+    void outgoingTruck(Integer id, Truck T);
 
     void addContainer(Container T);
 

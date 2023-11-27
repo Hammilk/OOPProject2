@@ -1,6 +1,7 @@
 public class Heavy extends Container{
     Heavy(int id, int weight) {
-        super(id, weight, "Heavy");
+        super(id, weight);
+        this.type = "Heavy";
     }
 
     @Override

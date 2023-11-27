@@ -1,14 +1,13 @@
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 public class Terminal implements ITerminal {
-    private int ID;
-    private double xCoordinate;
-    private double yCoordinate;
+    private final int ID;
+    private final double xCoordinate;
+    private final double yCoordinate;
 
-    Map<Integer, Object> containerMap;
-    ArrayList<Truck> history = new ArrayList<>();
-    ArrayList<Truck> current = new ArrayList<>();
+    private final Map<Integer, Object> containerMap = new LinkedHashMap<>();
+    private final Map<Integer, Object> history = new LinkedHashMap<>();
+    private final Map<Integer, Object> current = new LinkedHashMap<>();
 
     Terminal(int ID, double xCoordinate, double yCoordinate){
         this.ID = ID;
@@ -16,9 +15,13 @@ public class Terminal implements ITerminal {
         this.yCoordinate = yCoordinate;
     }
 
+    public int getID() {
+        return ID;
+    }
+
     @Override
     public void addContainer(Container T) {
-        containerMap.put(T.id,T);
+        containerMap.put(T.id, T);
     }
 
     @Override
@@ -27,26 +30,62 @@ public class Terminal implements ITerminal {
     }
 
     @Override
-    public void incomingTrucks(Truck T) {
-        history.remove(T);
-        current.add(T);
+    public void incomingTrucks(Integer id, Truck T) {
+        history.remove(id, T);
+        current.put(id, T);
     }
 
     @Override
-    public void outgoingTruck(Truck T) {
-        current.remove(T);
-        history.add(T);
+    public void outgoingTruck(Integer id, Truck T) {
+        current.remove(id, T);
+        history.put(id ,T);
     }
 
-    double getDistance(Terminal other){
-        return (yCoordinate - other.getyCoordinate())/(xCoordinate - other.getxCoordinate());
+    double getDistance(Terminal other) {
+        return (yCoordinate - other.getYCoordinate()) / (xCoordinate - other.getXCoordinate());
     }
 
-    public double getxCoordinate() {
+    public double getXCoordinate() {
         return xCoordinate;
     }
 
-    public double getyCoordinate() {
+    public double getYCoordinate() {
         return yCoordinate;
+    }
+
+    @Override
+    public String toString() {
+        Util obj1 = new Util(containerMap);
+
+        return "Terminal ID: " +
+                getID() +
+                " (x=" +
+                getXCoordinate() +
+                ", y=" +
+                getYCoordinate() +
+                ")" +
+                obj1.buildString() +
+                displayTrucks();
+    }
+
+    String displayTrucks(){
+        StringBuilder sb = new StringBuilder();
+        for(Integer key : current.keySet()){
+            Truck truck = (Truck) current.get(key);
+            sb.append(truck.toString());
+        }
+        return sb.toString();
+    }
+
+    public Map<Integer, Object> getContainerMap() {
+        return containerMap;
+    }
+
+    public Map<Integer, Object> getCurrent() {
+        return current;
+    }
+
+    public Map<Integer, Object> getHistory() {
+        return history;
     }
 }

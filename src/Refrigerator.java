@@ -1,6 +1,7 @@
 public class Refrigerator extends Heavy{
     Refrigerator(int id, int weight) {
         super(id, weight);
+        this.type="Refrigerator";
     }
 
     @Override

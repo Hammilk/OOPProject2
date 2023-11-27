@@ -1,7 +1,8 @@
 public class Basic extends Container{
 
     Basic( int id, int weight) {
-        super(id, weight, "Basic");
+        super(id, weight);
+        this.type = "Basic";
     }
 
     @Override

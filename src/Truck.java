@@ -3,30 +3,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Truck implements ITruck{
-    int ID;
-    double fuel;
-    int totalLoadCapacity;
-    double fuelConsumptionPerKm;
+    private int ID;
+    private double fuel;
+    private int totalLoadCapacity;
+
+    private double fuelCapacity;
+    private double fuelConsumptionPerKm;
 
     Object currentTerminal;
-
-    ArrayList<Container> ContainerList = new ArrayList<>();
 
     Map<Integer, Object> containerMap = new HashMap<>();
 
 
     public Truck(int ID, Object terminal, int totalLoadCapacity, double fuelConsumptionPerKm,
-                 double fuel){
+                 double fuel, double fuelCapacity){
         this.ID = ID;
         this.currentTerminal = terminal;
         this.totalLoadCapacity = totalLoadCapacity;
         this.fuelConsumptionPerKm = fuelConsumptionPerKm;
         this.fuel = fuel;
-    }
-
-
-    ArrayList<Container> getCurrentContainers(){
-        return ContainerList;
+        this.fuelCapacity = fuelCapacity;
     }
 
     @Override
@@ -38,7 +34,7 @@ public class Truck implements ITruck{
             return true;
         }
         else{
-            fuel = 0;
+            System.out.println("Not enough fuel!");
             return false;
         }
 
@@ -61,5 +57,22 @@ public class Truck implements ITruck{
         containerMap.remove(cont.id, cont);
         fuelConsumptionPerKm -= cont.consumption();
         return false;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public Map<Integer, Object> getContainerMap() {
+        return containerMap;
+    }
+
+    @Override
+    public String toString() {
+        Util obj1 = new Util(containerMap);
+
+        return "\n  Truck ID: " + ID
+                +"\n  Fuel Left: " + fuel
+                +"\n  " + obj1.buildString();
     }
 }

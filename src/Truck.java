@@ -6,9 +6,9 @@ public class Truck implements ITruck{
     private int ID;
     private double fuel;
     private int totalLoadCapacity;
-
-    private double fuelCapacity;
     private double fuelConsumptionPerKm;
+
+    private int currentLoadCapacity = 0;
 
     Object currentTerminal;
 
@@ -16,13 +16,12 @@ public class Truck implements ITruck{
 
 
     public Truck(int ID, Object terminal, int totalLoadCapacity, double fuelConsumptionPerKm,
-                 double fuel, double fuelCapacity){
+                 double fuel){
         this.ID = ID;
         this.currentTerminal = terminal;
         this.totalLoadCapacity = totalLoadCapacity;
         this.fuelConsumptionPerKm = fuelConsumptionPerKm;
         this.fuel = fuel;
-        this.fuelCapacity = fuelCapacity;
     }
 
     @Override
@@ -49,6 +48,7 @@ public class Truck implements ITruck{
     public boolean load(Container cont) {
         containerMap.put(cont.id, cont);
         fuelConsumptionPerKm += cont.consumption();
+        currentLoadCapacity+=cont.weight;
         return false;
     }
 
@@ -56,11 +56,20 @@ public class Truck implements ITruck{
     public boolean unLoad(Container cont) {
         containerMap.remove(cont.id, cont);
         fuelConsumptionPerKm -= cont.consumption();
+        currentLoadCapacity-=cont.weight;
         return false;
     }
 
     public int getID() {
         return ID;
+    }
+
+    public int getCurrentLoadCapacity() {
+        return currentLoadCapacity;
+    }
+
+    public int getTotalLoadCapacity() {
+        return totalLoadCapacity;
     }
 
     public Map<Integer, Object> getContainerMap() {

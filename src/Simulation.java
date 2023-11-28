@@ -13,41 +13,109 @@ public class Simulation {
     private int truckCount = 0;
     private int containerCount = 0;
 
+    private int choice;
+
     private boolean cont = true;
+
+    private boolean end = true;
 
     void sim(){
 
-        //TODO Final Output
+        try{
+            System.out.println("Begin Simulation:");
+            while(end){
+                choice = menu();
+                switch (choice){
+                    case 0 -> {
+                        end = false;
+                        finalPrint();
+                    }
+                    case 1 -> createTerminalPhase();
+                    case 2 -> {
+                        if (terminalCount > 0) {
+                            createTruckPhase();
+                        }
+                        else{
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                    case 3 -> {
+                        if (terminalCount > 0) {
+                            createContainerPhase();
+                        }
+                        else{
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                    case 4 -> {
+                        if (truckCount > 0) {
+                            refuelPhase();
+                        }
+                        else{
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                    case 5 -> {
+                        if (truckCount > 0){
+                            loadingPhase();
+                        }
+                        else{
+                            throw new IllegalArgumentException();
+                        }
 
-        //Create Terminals
-        createTerminalPhase();
-
-        //Create Truck or use existing truck phase
-        createTruckPhase();
-
-        //Create Container Phase or use existing container
-        createContainerPhase();
-
-        //Loading/Unloading Phase
-        loadingPhase();
-
-        //TODO Exception Handling Weight Limits
-
-        //Travel Phase
-        travelPhase();
-
-        //Truck Unloading Phase
-        loadingPhase();
-
-        //Truck Refuel Phase
-        refuelPhase();
-        //TODO Exception Handling Data validation
-        //TODO Exception Handling Fuel Limits
-
+                    }
+                    case 6 -> {
+                        if (truckCount > 0){
+                            travelPhase();
+                        }
+                        else{
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                }
+            }
+        }
+        catch(InputMismatchException e){
+            System.out.println("Input does not match datatype required.");
+            truckCount--;
+            input.nextLine();
+        }
+        catch (IllegalArgumentException e){
+            System.out.println("Invalid Input");
+            truckCount--;
+            input.nextLine();
+        }
     }
+
+    void finalPrint(){
+        for (Integer key : terminalMap.keySet()){ //Prints out key
+            Object o = terminalMap.get(key);
+            System.out.println(o.toString());
+        }
+    }
+
+    public int menu(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("0. End Simulation");
+        sb.append("\n1. Create Terminals");
+        if(terminalCount>0){
+            sb.append("\n2. Create Truck");
+            sb.append("\n3. Create Container");
+            sb.append("\n4. Refuel Truck");
+        }
+        if(truckCount>0 && containerCount>0){
+            sb.append("\n5. Load/Unload Truck");
+        }
+        if(truckCount>0 && containerCount>0 && terminalCount>1){
+            sb.append("\n6. Route truck");
+        }
+        System.out.println(sb);
+        return input.nextInt();
+    }
+
     public boolean inputYN(char c) throws IllegalArgumentException{
-        if(c=='Y'||c=='N'){
-            return c == 'Y';
+        if(c=='Y'||c=='y'||c=='N'||c=='n'){
+            return c == 'Y'||c == 'n';
         }
         else{
             throw new IllegalArgumentException("Must enter Y or N");
@@ -121,23 +189,13 @@ public class Simulation {
                 throw new IllegalArgumentException();
             }
 
-            System.out.println("Enter truck's total fuel capacity");
-            double fuelCapacity = input.nextDouble();
-            if(fuelCapacity<0){
-                throw new IllegalArgumentException();
-            }
-
             System.out.println("Enter truck's initial fuel: ");
             double fuel = input.nextDouble();
             if(fuel<0){
                 throw new IllegalArgumentException();
             }
-            if(fuel>fuelCapacity){
-                System.out.println("Truck's initial fuel is more than the the total fuel capacity of truck");
-                throw new IllegalArgumentException();
 
-            }
-            truck = new Truck(id, initialTerminal, loadCapacity, fuelConsumptionPerKM, fuel, fuelCapacity);
+            truck = new Truck(id, initialTerminal, loadCapacity, fuelConsumptionPerKM, fuel);
             initialTerminal.incomingTrucks(id, truck);
         }
         catch(InputMismatchException e){
@@ -221,56 +279,75 @@ public class Simulation {
         try{
             boolean cont = true;
             Object o;
-            while(cont){
-                System.out.println("Choose a terminal for loading containers: ");
-                o = help(terminalMap);
-                if(o instanceof IllegalArgumentException){
-                    throw new IllegalArgumentException();
-                }
-                if(o instanceof InputMismatchException){
-                    throw new InputMismatchException();
-                }
-                terminal = (Terminal) o;
-                System.out.println("Choose a truck for loading/unloading: ");
-                o = help(truckMap, terminal);
-                if(o instanceof IllegalArgumentException){
-                    throw new IllegalArgumentException();
-                }
-                if(o instanceof InputMismatchException){
-                    throw new InputMismatchException();
-                }
-                truck = (Truck) o;
+            System.out.println("Choose a terminal for loading containers: ");
+            o = help(terminalMap);
+            if (o instanceof IllegalArgumentException) {
+                throw new IllegalArgumentException();
+            }
+            if (o instanceof InputMismatchException) {
+                throw new InputMismatchException();
+            }
+            terminal = (Terminal) o;
+            System.out.println("Choose a truck for loading/unloading: ");
+            o = help(truckMap, terminal);
+            if (o instanceof IllegalArgumentException) {
+                throw new IllegalArgumentException();
+            }
+            if (o instanceof InputMismatchException) {
+                throw new InputMismatchException();
+            }
+            truck = (Truck) o;
 
-                while(cont){
-                    System.out.println("Load truck ID " + truck.getID() + "? (Y/N)");
-                    if(inputYN(input.next().charAt(0))){
-                        System.out.println("Select container to load");
-                        container = (Container) help(terminal);
+            System.out.println("Unload or Load Trucks?");
 
-                        truck.load(container); //Loads container into truck data structure
-                        terminal.getContainerMap().remove(container.id); //Removes container from terminal data structure
+            System.out.println("1. Load Truck");
+            System.out.println("2. Unload Truck");
+            System.out.println("3. End Loading Phase");
+            switch(input.nextInt()){
+                case 1: {
+                    while(cont){
+                        System.out.println("Load truck ID " + truck.getID() + "? (Y/N)");
+                        if(inputYN(input.next().charAt(0))){
+                            System.out.println("Select container to load");
+                            container = (Container) help(terminal);
 
-                        System.out.println("Load more containers into truck ID: " + truck.getID() + "? (Y/N)");
-                        cont = inputYN(input.next().charAt(0));
-                    }
-                }
-                cont = true;
-                while(cont){
-                    System.out.println("Unload truck ID: " + truck.getID() + "? (Y/N)");
-                    if(input.next().charAt(0)=='Y'){
-                        while(cont){
-                            System.out.println("Select container to unload");
-                            System.out.println(truck.getContainerMap());
-                            System.out.println("Choose container to unload");
-                            truck.unLoad(container);
-                            System.out.println("Unload more containers into truck ID" + truck.getID() + "? (Y/N)");
+                            if(container.weight + truck.getCurrentLoadCapacity()>truck.getTotalLoadCapacity()){
+                                System.out.println("Container weight to heavy!");
+                            }
+                            else{
+                                truck.load(container); //Loads container into truck data structure
+                                terminal.getContainerMap().remove(container.id, container); //Removes container from terminal data structure
+                            }
+
+                            System.out.println("Load more containers into truck ID: " + truck.getID() + "? (Y/N)");
                             cont = inputYN(input.next().charAt(0));
                         }
                     }
-                    System.out.println("Load more trucks? (Y/N)");
-                    cont = inputYN(input.next().charAt(0));
                 }
+                case 2: {
+                    cont = true;
+                    while(cont){
+                        System.out.println("Unload truck ID: " + truck.getID() + "? (Y/N)");
+                        if(input.next().charAt(0)=='Y'){
+                            while(cont){
+                                System.out.println("Select container to unload");
+                                container = (Container) help(terminal);
 
+                                truck.unLoad(container);
+                                terminal.getContainerMap().put(container.id, container);
+
+                                System.out.println("Unload more containers into truck ID" + truck.getID() + "? (Y/N)");
+                                cont = inputYN(input.next().charAt(0));
+                            }
+                        }
+                        System.out.println("Load more trucks? (Y/N)");
+                        cont = inputYN(input.next().charAt(0));
+                    }
+                }
+                case 3: {
+                    break;
+                }
+                default: throw new IllegalArgumentException();
             }
         }
         catch(InputMismatchException e){
@@ -310,7 +387,7 @@ public class Simulation {
         boolean cont = true;
         try{
             while(cont){
-                System.out.println("Refuel Truck?");
+                System.out.println("Refuel Truck?(Y/N)");
 
                 if(inputYN(input.next().charAt(0))){
 
@@ -322,11 +399,6 @@ public class Simulation {
 
                         System.out.println("How much fuel to add?");
                         truck.reFuel(input.nextDouble());
-                    }
-
-                    System.out.println("Refuel more trucks?");
-                    if(inputYN(input.next().charAt(0))){
-                        cont=false;
                     }
                 }
                 else cont = false;

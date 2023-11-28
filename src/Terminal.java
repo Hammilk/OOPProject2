@@ -42,7 +42,7 @@ public class Terminal implements ITerminal {
     }
 
     double getDistance(Terminal other) {
-        return (yCoordinate - other.getYCoordinate()) / (xCoordinate - other.getXCoordinate());
+        return Math.sqrt(Math.pow(xCoordinate - other.getXCoordinate(), 2) + Math.pow(yCoordinate - other.getYCoordinate(), 2));
     }
 
     public double getXCoordinate() {

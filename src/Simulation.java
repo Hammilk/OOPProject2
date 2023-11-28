@@ -72,6 +72,7 @@ public class Simulation {
                             throw new IllegalArgumentException();
                         }
                     }
+                    default -> throw new IllegalArgumentException();
                 }
             }
         }
@@ -458,8 +459,6 @@ public class Simulation {
         catch(InputMismatchException | IllegalArgumentException e){
             return e;
         }
-
-
     }
     public Object help(Terminal m){
         String id;

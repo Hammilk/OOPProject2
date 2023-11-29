@@ -26,7 +26,7 @@ public class Util {
         return sb.toString();
     }
 
-    public String buildString(boolean b){
+    public String buildString(boolean b){ //TRUE = called in terminal, FALSE = called in truck, only matters for spacing
         StringBuilder sb = new StringBuilder();
 
         String s1 = displayContainers("Basic");

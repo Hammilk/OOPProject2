@@ -64,8 +64,8 @@ public class Terminal implements ITerminal {
                 ", y=" +
                 getYCoordinate() +
                 ")" +
-                obj1.buildString(true) +
-                displayTrucks();
+                obj1.buildString(true) + //Uses util classes to construct container lists
+                displayTrucks(); //Displays truck formatted
     }
 
     String displayTrucks(){

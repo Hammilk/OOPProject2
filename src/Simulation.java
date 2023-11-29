@@ -25,11 +25,11 @@ public class Simulation {
                 switch (choice){
                     case 0 -> {
                         end = false;
-                        finalPrint();
+                        finalPrint(); //Ends simulation and puts in final output
                     }
-                    case 1 -> createTerminalPhase();
+                    case 1 -> createTerminalPhase(); //Makes terminal
                     case 2 -> {
-                        if (terminalCount > 0) {
+                        if (terminalCount > 0) { //Does not allow for truck creation is terminal not made
                             createTruckPhase();
                         }
                         else{
@@ -37,7 +37,7 @@ public class Simulation {
                         }
                     }
                     case 3 -> {
-                        if (terminalCount > 0) {
+                        if (terminalCount > 0) { //Same as above comment
                             createContainerPhase();
                         }
                         else{
@@ -45,7 +45,7 @@ public class Simulation {
                         }
                     }
                     case 4 -> {
-                        if (truckCount > 0) {
+                        if (truckCount > 0) { //Can't refuel is no truck
                             refuelPhase();
                         }
                         else{
@@ -53,7 +53,7 @@ public class Simulation {
                         }
                     }
                     case 5 -> {
-                        if (truckCount > 0){
+                        if (truckCount > 0){ //Can't load if no truck
                             loadingPhase();
                         }
                         else{
@@ -62,7 +62,7 @@ public class Simulation {
 
                     }
                     case 6 -> {
-                        if (truckCount > 0){
+                        if (truckCount > 0 && terminalCount>1){ //Can't travel is not truck
                             travelPhase();
                         }
                         else{
@@ -75,7 +75,7 @@ public class Simulation {
         }
         catch(InputMismatchException e){
             System.out.println("Input does not match datatype required.");
-            truckCount--;
+            truckCount--; //Resets truck count for error
             input.nextLine();
         }
         catch (IllegalArgumentException e){
@@ -88,7 +88,7 @@ public class Simulation {
     void finalPrint(){
         for (Integer key : terminalMap.keySet()){ //Prints out key
             Object o = terminalMap.get(key);
-            System.out.println(o.toString());
+            System.out.println(o.toString()); //Prints formatted string
         }
     }
 
@@ -96,7 +96,7 @@ public class Simulation {
         StringBuilder sb = new StringBuilder();
         sb.append("0. End Simulation");
         sb.append("\n1. Create Terminals");
-        if(terminalCount>0){
+        if(terminalCount>0){ //Hides options if pre-reqs not met
             sb.append("\n2. Create Truck");
             sb.append("\n3. Create Container");
             sb.append("\n4. Refuel Truck");
@@ -104,16 +104,16 @@ public class Simulation {
         if(truckCount>0 && containerCount>0){
             sb.append("\n5. Load/Unload Truck");
         }
-        if(truckCount>0 && containerCount>0 && terminalCount>1){
+        if(truckCount>0 && terminalCount>1){
             sb.append("\n6. Route truck");
         }
         System.out.println(sb);
         return input.nextInt();
     }
 
-    public boolean inputYN(char c) throws IllegalArgumentException{
+    public boolean inputYN(char c) throws IllegalArgumentException{ //Repetive code, didn't want to type more than once
         if(c=='Y'||c=='y'||c=='N'||c=='n'){
-            return c == 'Y'||c == 'n';
+            return c == 'Y'||c == 'y';
         }
         else{
             throw new IllegalArgumentException("Must enter Y or N");
@@ -151,7 +151,7 @@ public class Simulation {
                 input.nextLine();
             }
         }
-        return new Terminal(id, x, y);
+        return new Terminal(id, x, y); //Creates new terminal object
     }
 
     public void createTruckPhase(){
@@ -170,7 +170,7 @@ public class Simulation {
         try{
             System.out.println("Enter which initial terminal location of the truck " + ": ");
             o = help(terminalMap);
-            if(o instanceof IllegalArgumentException){
+            if(o instanceof IllegalArgumentException){ //Checks if help function returned an error
                 throw new IllegalArgumentException();
             }
             Terminal initialTerminal = (Terminal) o;
@@ -253,7 +253,7 @@ public class Simulation {
                 System.out.println("2. Refrigerator");
                 System.out.println("3. Tanker");
                 switch (input.nextInt()){
-                    case 1 -> container = new Heavy(id, weight);
+                    case 1 -> container = new Heavy(id, weight); //Creates new container based on weight/input
                     case 2 -> container = new Refrigerator(id, weight);
                     case 3 -> container = new Tanker(id, weight);
                     default -> throw new IllegalArgumentException();
@@ -301,40 +301,35 @@ public class Simulation {
             System.out.println("2. Unload Truck");
             System.out.println("3. End Loading Phase");
             Container container;
-            switch(input.nextInt()){
-                case 1: {
+            switch (input.nextInt()) {
+                case 1 -> {
                     System.out.println("Select container to load");
                     o = help(terminal);
-                    if(o instanceof IllegalArgumentException){
+                    if (o instanceof IllegalArgumentException) {
                         throw new IllegalArgumentException();
                     }
                     container = (Container) o;
 
-                    if(container.weight + truck.getCurrentLoadCapacity()>truck.getTotalLoadCapacity()){
-                        System.out.println("Container weight too heavy!");
-                    }
-                    else{
+                    if (container.weight + truck.getCurrentLoadCapacity() > truck.getTotalLoadCapacity()) {
+                        System.out.println("Container weight too heavy!"); //Skips container loading if weight limit exceeded
+                    } else {
                         truck.load(container); //Loads container into truck data structure
                         terminal.getContainerMap().remove(container.id, container); //Removes container from terminal data structure
                     }
-                    break;
                 }
-                case 2: {
+                case 2 -> {
                     System.out.println("Select container to unload");
                     o = helpUnload(truck);
-                    if(o instanceof IllegalArgumentException){
+                    if (o instanceof IllegalArgumentException) {
                         throw new IllegalArgumentException();
                     }
                     container = (Container) o;
                     truck.unLoad(container);
                     terminal.getContainerMap().put(container.id, container);
-                    break;
                 }
-
-                case 3: {
-                    break;
+                case 3 -> {
                 }
-                default: throw new IllegalArgumentException();
+                default -> throw new IllegalArgumentException();
             }
         }
         catch(InputMismatchException e){
@@ -351,16 +346,16 @@ public class Simulation {
         boolean cont = true;
         while(cont){
             Terminal destinationTerminal;
-            System.out.println("Choose origin terminal: ");
+            System.out.println("Choose origin terminal: "); //Where the truck starts at
             terminal = (Terminal) help(terminalMap);
 
-            System.out.println("Choose a truck to travel");
+            System.out.println("Choose a truck to travel"); //Where the truck ends at
             truck = (Truck) help(truckMap, terminal);
 
             System.out.println("Choose destination terminal");
             destinationTerminal = (Terminal) help(terminalMap);
 
-            if(truck.goTo(destinationTerminal)){
+            if(truck.goTo(destinationTerminal)){ //methods in truck class will handle fuel
                 terminal.outgoingTruck(truck.getID(), truck);
                 destinationTerminal.incomingTrucks(truck.getID(), truck);
             }
@@ -433,9 +428,9 @@ public class Simulation {
                 }
                 System.out.println("Enter ID: ");
                 id = input.next();
-                if(!m.containsKey(Integer.parseInt(id))){
-                    throw new IllegalArgumentException();
-                }
+            }
+            if(!terminal.getCurrent().containsKey(Integer.parseInt(id))){
+                throw new IllegalArgumentException();
             }
             return m.get(Integer.parseInt(id));
         }
@@ -455,16 +450,12 @@ public class Simulation {
 
                 System.out.println("Enter ID: ");
                 id = input.next();
-
-                if(m.getContainerMap().containsKey(Integer.parseInt(id))){
-                    return m.getContainerMap().get(Integer.parseInt(id));
-                }
-                else{
-                    throw new IllegalArgumentException();
-                }
+            }
+            if(m.getContainerMap().containsKey(Integer.parseInt(id))){
+                return m.getContainerMap().get(Integer.parseInt(id));
             }
             else{
-                return m.getContainerMap().get(Integer.parseInt(id));
+                throw new IllegalArgumentException();
             }
 
         }

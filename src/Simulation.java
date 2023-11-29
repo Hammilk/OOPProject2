@@ -402,10 +402,9 @@ public class Simulation {
                 }
                 System.out.println("Enter ID: ");
                 id = input.next();
-                if(!m.containsKey(Integer.parseInt(id))){
-                    throw new IllegalArgumentException();
-                }
-
+            }
+            if(!m.containsKey(Integer.parseInt(id))){
+                throw new IllegalArgumentException();
             }
             return m.get(Integer.parseInt(id));
         }
@@ -475,14 +474,14 @@ public class Simulation {
                 System.out.println("Enter ID: ");
                 id = input.next();
 
-                if (t.getContainerMap().containsKey(Integer.parseInt(id))) {
-                    return t.getContainerMap().get(Integer.parseInt(id));
-                }
-                else{
-                    throw new IllegalArgumentException();
-                }
+
             }
-            return t.getContainerMap().get(Integer.parseInt(id));
+            if (t.getContainerMap().containsKey(Integer.parseInt(id))) {
+                return t.getContainerMap().get(Integer.parseInt(id));
+            }
+            else{
+                throw new IllegalArgumentException();
+            }
         }
         catch(InputMismatchException | IllegalArgumentException e){
             return e;

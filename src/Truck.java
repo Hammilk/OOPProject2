@@ -1,5 +1,6 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Truck implements ITruck{
@@ -12,7 +13,9 @@ public class Truck implements ITruck{
 
     Object currentTerminal;
 
-    Map<Integer, Object> containerMap = new HashMap<>();
+    Map<Integer, Object> containerMap = new LinkedHashMap<>();
+
+    NumberFormat formatter = new DecimalFormat("#0.00");
 
 
     public Truck(int ID, Object terminal, int totalLoadCapacity, double fuelConsumptionPerKm,
@@ -60,6 +63,7 @@ public class Truck implements ITruck{
         return false;
     }
 
+
     public int getID() {
         return ID;
     }
@@ -81,7 +85,7 @@ public class Truck implements ITruck{
         Util obj1 = new Util(containerMap);
 
         return "\n  Truck ID: " + ID
-                +"\n  Fuel Left: " + fuel
+                +"\n  Fuel Left: " + formatter.format(fuel)
                 +"\n  " + obj1.buildString();
     }
 }

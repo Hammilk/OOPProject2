@@ -306,45 +306,34 @@ public class Simulation {
             System.out.println("3. End Loading Phase");
             switch(input.nextInt()){
                 case 1: {
-                    while(cont){
-                        System.out.println("Load truck ID " + truck.getID() + "? (Y/N)");
-                        if(inputYN(input.next().charAt(0))){
-                            System.out.println("Select container to load");
-                            container = (Container) help(terminal);
-
-                            if(container.weight + truck.getCurrentLoadCapacity()>truck.getTotalLoadCapacity()){
-                                System.out.println("Container weight to heavy!");
-                            }
-                            else{
-                                truck.load(container); //Loads container into truck data structure
-                                terminal.getContainerMap().remove(container.id, container); //Removes container from terminal data structure
-                            }
-
-                            System.out.println("Load more containers into truck ID: " + truck.getID() + "? (Y/N)");
-                            cont = inputYN(input.next().charAt(0));
-                        }
+                    System.out.println("Select container to load");
+                    o = help(terminal);
+                    if(o instanceof IllegalArgumentException){
+                        throw new IllegalArgumentException();
                     }
+                    container = (Container) o;
+
+                    if(container.weight + truck.getCurrentLoadCapacity()>truck.getTotalLoadCapacity()){
+                        System.out.println("Container weight too heavy!");
+                    }
+                    else{
+                        truck.load(container); //Loads container into truck data structure
+                        terminal.getContainerMap().remove(container.id, container); //Removes container from terminal data structure
+                    }
+                    break;
                 }
                 case 2: {
-                    cont = true;
-                    while(cont){
-                        System.out.println("Unload truck ID: " + truck.getID() + "? (Y/N)");
-                        if(input.next().charAt(0)=='Y'){
-                            while(cont){
-                                System.out.println("Select container to unload");
-                                container = (Container) help(terminal);
-
-                                truck.unLoad(container);
-                                terminal.getContainerMap().put(container.id, container);
-
-                                System.out.println("Unload more containers into truck ID" + truck.getID() + "? (Y/N)");
-                                cont = inputYN(input.next().charAt(0));
-                            }
-                        }
-                        System.out.println("Load more trucks? (Y/N)");
-                        cont = inputYN(input.next().charAt(0));
+                    System.out.println("Select container to unload");
+                    o = helpUnload(truck);
+                    if(o instanceof IllegalArgumentException){
+                        throw new IllegalArgumentException();
                     }
+                    container = (Container) o;
+                    truck.unLoad(container);
+                    terminal.getContainerMap().put(container.id, container);
+                    break;
                 }
+
                 case 3: {
                     break;
                 }
@@ -460,27 +449,58 @@ public class Simulation {
             return e;
         }
     }
+
+
     public Object help(Terminal m){
         String id;
         try{
             System.out.println("Type \"Help\" to see list of IDs");
             id = input.next();
             if(Objects.equals(id, "Help")){
-                for (Integer key : m.getContainerMap().keySet()){
-                    System.out.println("ID: " + key + "\n");
-                }
+                System.out.println(m.toString());
+
                 System.out.println("Enter ID: ");
                 id = input.next();
-                if(!m.getContainerMap().containsKey(Integer.parseInt(id))){
+
+                if(m.getContainerMap().containsKey(Integer.parseInt(id))){
+                    return m.getContainerMap().get(Integer.parseInt(id));
+                }
+                else{
                     throw new IllegalArgumentException();
                 }
             }
-            return m.getContainerMap().get(Integer.parseInt(id));
+            else{
+                return m.getContainerMap().get(Integer.parseInt(id));
+            }
+
         }
         catch(InputMismatchException | IllegalArgumentException e){
             return e;
         }
+    }
 
+    public Object helpUnload(Truck t){
+        String id;
+        try {
+            System.out.println("Type \"Help\" to see list of IDs");
+            id = input.next();
+            if (Objects.equals(id, "Help")) {
+                System.out.println(t);
 
+                System.out.println("Enter ID: ");
+                id = input.next();
+
+                if (t.getContainerMap().containsKey(Integer.parseInt(id))) {
+                    return t.getContainerMap().get(Integer.parseInt(id));
+                }
+                else{
+                    throw new IllegalArgumentException();
+                }
+            }
+            return t.getContainerMap().get(Integer.parseInt(id));
+        }
+        catch(InputMismatchException | IllegalArgumentException e){
+            return e;
+        }
     }
 }

@@ -4,14 +4,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Truck implements ITruck{
-    private int ID;
+    private final int ID;
     private double fuel;
-    private int totalLoadCapacity;
+    private final int totalLoadCapacity;
     private double fuelConsumptionPerKm;
 
     private int currentLoadCapacity = 0;
 
-    Object currentTerminal;
+    private Object currentTerminal;
 
     Map<Integer, Object> containerMap = new LinkedHashMap<>();
 
@@ -86,6 +86,6 @@ public class Truck implements ITruck{
 
         return "\n  Truck ID: " + ID
                 +"\n  Fuel Left: " + formatter.format(fuel)
-                +"\n  " + obj1.buildString();
+                +"\n  " + obj1.buildString(false);
     }
 }

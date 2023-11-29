@@ -6,14 +6,11 @@ public class Simulation {
     private final Map<Integer, Object> truckMap = new LinkedHashMap<>();
 
     private final Scanner input = new Scanner(System.in);
-    private Container container;
     private Terminal terminal;
     private Truck truck;
     private int terminalCount = 0;
     private int truckCount = 0;
     private int containerCount = 0;
-
-    private int choice;
 
     private boolean cont = true;
 
@@ -24,7 +21,7 @@ public class Simulation {
         try{
             System.out.println("Begin Simulation:");
             while(end){
-                choice = menu();
+                int choice = menu();
                 switch (choice){
                     case 0 -> {
                         end = false;
@@ -278,7 +275,6 @@ public class Simulation {
 
     public void loadingPhase(){
         try{
-            boolean cont = true;
             Object o;
             System.out.println("Choose a terminal for loading containers: ");
             o = help(terminalMap);
@@ -304,6 +300,7 @@ public class Simulation {
             System.out.println("1. Load Truck");
             System.out.println("2. Unload Truck");
             System.out.println("3. End Loading Phase");
+            Container container;
             switch(input.nextInt()){
                 case 1: {
                     System.out.println("Select container to load");
@@ -354,13 +351,13 @@ public class Simulation {
         boolean cont = true;
         while(cont){
             Terminal destinationTerminal;
-            System.out.println("Choose a terminal: ");
+            System.out.println("Choose origin terminal: ");
             terminal = (Terminal) help(terminalMap);
 
             System.out.println("Choose a truck to travel");
             truck = (Truck) help(truckMap, terminal);
 
-            System.out.println("Choose a destination point");
+            System.out.println("Choose destination terminal");
             destinationTerminal = (Terminal) help(terminalMap);
 
             if(truck.goTo(destinationTerminal)){
@@ -374,25 +371,22 @@ public class Simulation {
     }
 
     public void refuelPhase(){
-        boolean cont = true;
         try{
-            while(cont){
-                System.out.println("Refuel Truck?(Y/N)");
-
-                if(inputYN(input.next().charAt(0))){
-
-                    System.out.println("Choose Truck");
-                    truck = (Truck) help(truckMap);
-
-                    System.out.println("Refuel Truck? (Y/N)");
-                    if(inputYN(input.next().charAt(0))){
-
-                        System.out.println("How much fuel to add?");
-                        truck.reFuel(input.nextDouble());
-                    }
-                }
-                else cont = false;
+            double fuel;
+            System.out.println("Choose Truck to refuel");
+            truck = (Truck) help(truckMap);
+            System.out.println("How much fuel to add?");
+            fuel = input.nextDouble();
+            if(fuel<0){
+                throw new IllegalArgumentException();
             }
+            else{
+                truck.reFuel(fuel);
+            }
+        }
+        catch (IllegalArgumentException e){
+            System.out.println("Invalid Input");
+            input.nextLine();
         }
         catch(InputMismatchException e){
             System.out.println("Input does not match datatype required.");

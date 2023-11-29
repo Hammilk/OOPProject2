@@ -26,7 +26,7 @@ public class Util {
         return sb.toString();
     }
 
-    public String buildString(){
+    public String buildString(boolean b){
         StringBuilder sb = new StringBuilder();
 
         String s1 = displayContainers("Basic");
@@ -34,22 +34,48 @@ public class Util {
         String s3 = displayContainers("Refrigerator");
         String s4 = displayContainers("Tanker");
 
-        if (!s1.equals("Empty")) {
-            sb.append("\n  Basic Containers: \n");
-            sb.append(s1);
+        if(b){
+            if (!s1.equals("Empty")) {
+                sb.append("\n  Basic Containers: \n");
+                sb.append(s1);
+            }
+            if (!s2.equals("Empty")) {
+                sb.append("\n  Heavy Containers: \n");
+                sb.append(s2);
+            }
+            if (!s3.equals("Empty")) {
+                sb.append("\n  Refrigerator Containers: \n");
+                sb.append(s3);
+            }
+            if (!s4.equals("Empty")) {
+                sb.append("\n  Tanker Containers: \n");
+                sb.append(s4);
+            }
         }
-        if (!s2.equals("Empty")) {
-            sb.append("\n  Heavy Containers: \n");
-            sb.append(s2);
+        else{
+            if (!s1.equals("Empty")) {
+                sb.append("\n    Basic Containers: \n");
+                sb.append("  ");
+                sb.append(s1);
+            }
+            if (!s2.equals("Empty")) {
+                sb.append("\n    Heavy Containers: \n");
+                sb.append("  ");
+                sb.append(s2);
+            }
+            if (!s3.equals("Empty")) {
+                sb.append("\n    Refrigerator Containers: \n");
+                sb.append("  ");
+                sb.append(s3);
+            }
+            if (!s4.equals("Empty")) {
+                sb.append("\n    Tanker Containers: \n");
+                sb.append("  ");
+                sb.append(s4);
+            }
         }
-        if (!s3.equals("Empty")) {
-            sb.append("\n  Refrigerator Containers: \n");
-            sb.append(s3);
-        }
-        if (!s4.equals("Empty")) {
-            sb.append("\n  Tanker Containers: \n");
-            sb.append(s4);
-        }
+
+
         return sb.toString();
     }
 

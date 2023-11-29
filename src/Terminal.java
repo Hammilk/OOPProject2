@@ -9,8 +9,6 @@ public class Terminal implements ITerminal {
     private final Map<Integer, Object> history = new LinkedHashMap<>();
     private final Map<Integer, Object> current = new LinkedHashMap<>();
 
-    private final Map<Integer, Object> truckContainers = new LinkedHashMap<>();
-
     Terminal(int ID, double xCoordinate, double yCoordinate){
         this.ID = ID;
         this.xCoordinate = xCoordinate;
@@ -47,13 +45,6 @@ public class Terminal implements ITerminal {
         return Math.sqrt(Math.pow(xCoordinate - other.getXCoordinate(), 2) + Math.pow(yCoordinate - other.getYCoordinate(), 2));
     }
 
-
-
-
-
-
-
-
     public double getXCoordinate() {
         return xCoordinate;
     }
@@ -73,7 +64,7 @@ public class Terminal implements ITerminal {
                 ", y=" +
                 getYCoordinate() +
                 ")" +
-                obj1.buildString() +
+                obj1.buildString(true) +
                 displayTrucks();
     }
 
